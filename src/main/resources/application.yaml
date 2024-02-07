@@ -1,0 +1,71 @@
+spring:
+  application:
+    name: saldo-conta
+    description: Serviço de Gerenciamento de Conta Bancaria
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MYSQL
+    driverClassName: org.h2.Driver
+    username: sa
+    password: sa
+    flyway:
+      enabled: true
+    jpa:
+      database-platform: org.hibernate.dialect.H2Dialect
+    h2:
+      console:
+        enabled: true
+    query:
+      show: true
+    sql:
+      init:
+        schema-locations: classpath:/scripts/schema.sql
+        data-locations: classpath:/scripts/data.sql
+        encoding: UTF-8
+
+server:
+  address: 0.0.0.0
+  port: 8080
+  servlet:
+    session:
+      cookie:
+        http-only: true
+        secure: true
+  error:
+    whitelabel:
+      enabled: false
+management:
+  server:
+    port: 9090
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: info, health, metrics, prometheus
+
+---
+# configurações para desenvolvimento funcional (MYSQL)
+spring:
+  profiles: local
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MYSQL
+    driverClassName: org.h2.Driver
+    username: sa
+    password: sa
+  flyway:
+    enabled: false
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      enabled: true
+  query:
+    show: true
+  sql:
+    init:
+      schema-locations: classpath:/scripts/schema.sql
+      data-locations: classpath:/scripts/data.sql
+      encoding: UTF-8
+
+---
