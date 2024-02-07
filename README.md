@@ -1,2 +1,2 @@
 # saldo-conta
-Exercicio de treinamento de conceitos de desenvolvimento de APIs
+Exercicio de treinamento de conceitos de Excecoes
