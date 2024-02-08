@@ -88,6 +88,12 @@
             <version>2.1.210</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>8.5.1</version> <!-- Versão mais recente do Flyway -->
+        </dependency>
+
 
     </dependencies>
     <build>
@@ -132,6 +138,7 @@
             <plugin>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
+                <version>8.5.1</version>
                 <configuration>
                     <driver>com.mysql.cj.jdbc.Driver</driver>
                     <url>jdbc:mysql://localhost:3306/testdb?useSSL=false</url>
