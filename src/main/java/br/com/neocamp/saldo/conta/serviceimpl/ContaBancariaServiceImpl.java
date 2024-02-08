@@ -6,6 +6,7 @@ import br.com.neocamp.saldo.conta.exception.SaldoInsuficienteException;
 import br.com.neocamp.saldo.conta.repository.ContaBancariaRepository;
 import br.com.neocamp.saldo.conta.service.ContaBancariaService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,16 +17,14 @@ import java.util.Optional;
 @Slf4j
 public class ContaBancariaServiceImpl implements ContaBancariaService {
 
+    @Autowired
     ContaBancariaRepository repository;
 
     @Override
     public void sacar(Integer numeroConta, Double valor) throws SaldoInsuficienteException, ContaBancariaNotFoundException {
-        //Optional<ContaBancaria> conta = repository.findById(numeroConta);
-        
-        ContaBancaria contaBancaria;
-        List<ContaBancaria> contas = getContaBancarias();
 
-        Optional<ContaBancaria> conta = contas.stream().filter(contaFiltrada -> numeroConta.equals(contaFiltrada.getNumeroConta())).findFirst();
+        Optional<ContaBancaria> conta = repository.findById(numeroConta);
+        ContaBancaria contaBancaria;
 
         if(conta.isPresent())  {
            contaBancaria = conta.get();
@@ -42,7 +41,7 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
         }
 
         contaBancaria.setSaldo(contaBancaria.getSaldo()-valor);
-        //repository.update(contaBancaria);
+        repository.save(contaBancaria);
     }
 
     @Override
