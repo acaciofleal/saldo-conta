@@ -1,6 +1,7 @@
 package br.com.neocamp.saldo.conta.controller;
 
 import br.com.neocamp.saldo.conta.domain.ContaBancaria;
+import br.com.neocamp.saldo.conta.dto.ContaBancariaRequestDTO;
 import br.com.neocamp.saldo.conta.exception.ContaBancariaNotFoundException;
 import br.com.neocamp.saldo.conta.exception.SaldoInsuficienteException;
 import br.com.neocamp.saldo.conta.service.ContaBancariaService;
@@ -28,4 +29,11 @@ public class ContaBancariaController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @PostMapping()
+    public ResponseEntity<ContaBancaria> criarConta(@RequestBody ContaBancariaRequestDTO contaBancariaRequestDTO) {
+        ContaBancaria contaBancaria = service.criarConta(contaBancariaRequestDTO.getValor());
+        return ResponseEntity.ok(contaBancaria);
+    }
+
 }

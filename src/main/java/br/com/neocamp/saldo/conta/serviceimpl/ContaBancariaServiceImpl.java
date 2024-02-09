@@ -52,4 +52,15 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
     public Double consultarSaldo(Integer numeroConta) {
         return null;
     }
+
+    @Override
+    public ContaBancaria criarConta(Double valor) {
+        if (valor < 50) {
+            throw new IllegalArgumentException("Valor minimo exigido para abertura de conta é R$50,00.");
+        }
+        ContaBancaria contaBancaria = new ContaBancaria();
+        contaBancaria.setSaldo(valor);
+        return repository.save(contaBancaria);
+
+    }
 }
