@@ -10,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -48,6 +46,7 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
 
     @Override
     public void depositar(Integer numeroConta, Double valor) {
+        //inicializar();
         Optional<ContaBancaria> contaBancaria = repository.findById(numeroConta);
         ContaBancaria conta;
 
@@ -91,5 +90,15 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
     @Override
     public Double consultarSaldo(Integer numeroConta) {
         return null;
+    }
+
+    public void inicializar() {
+        if ( repository.findAll().isEmpty() ) {
+            repository.save(new ContaBancaria(0, 1000.0));
+            repository.save(new ContaBancaria(1, 5000.0));
+            repository.save(new ContaBancaria(2, 50.0));
+        } else {
+            log.debug(repository.findAll().toString());
+        }
     }
 }
