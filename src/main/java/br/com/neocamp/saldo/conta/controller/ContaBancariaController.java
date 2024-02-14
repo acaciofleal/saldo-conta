@@ -7,11 +7,9 @@ import br.com.neocamp.saldo.conta.exception.ContaBancariaNotFoundException;
 import br.com.neocamp.saldo.conta.exception.SaldoInsuficienteException;
 import br.com.neocamp.saldo.conta.exception.ValorInvalidoException;
 import br.com.neocamp.saldo.conta.service.ContaBancariaService;
-import io.swagger.models.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,6 +66,10 @@ public class ContaBancariaController {
         try {
             service.excluirConta(numeroConta);
             return ResponseEntity.ok("Conta excluída com sucesso!");
+        } catch (ContaBancariaNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 
     @PutMapping("/deposito/{numeroConta}")
