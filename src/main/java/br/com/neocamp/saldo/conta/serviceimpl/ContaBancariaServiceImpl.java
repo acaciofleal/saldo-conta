@@ -110,4 +110,15 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
         }
         return contas;
     }
+
+    @Override
+    public void excluirConta(Integer numeroConta) throws ContaBancariaNotFoundException {
+        Optional<ContaBancaria> optionalConta = repository.findById(numeroConta);
+        if (optionalConta.isPresent()) {
+            repository.delete(optionalConta.get());
+        } else {
+            throw new ContaBancariaNotFoundException("Conta bancária: " + numeroConta + " não foi encontrada." );
+        }
+    }
+
 }

@@ -15,5 +15,9 @@ public interface ContaBancariaService {
 
     List<ContaBancaria> buscarContas();
 
+
+    void excluirConta(Integer numeroConta);
+
     public ContaBancaria transferir(Integer numContaOrigem, Integer numContaDestino, Double valor);
+
 }
