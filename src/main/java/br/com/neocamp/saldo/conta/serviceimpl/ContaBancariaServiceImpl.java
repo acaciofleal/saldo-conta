@@ -74,4 +74,13 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
         }
     }
 
+    @Override
+    public List<ContaBancaria> buscarContas() {
+        List<ContaBancaria> contas = repository.findAll();
+        if (contas.isEmpty()) {
+            throw new ContaBancariaNotFoundException("Nenhuma conta bancária foi criada no sistema.");
+        }
+        return contas;
+    }
+
 }
