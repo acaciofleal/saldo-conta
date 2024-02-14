@@ -28,4 +28,14 @@ public class ContaBancariaController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @PutMapping("/deposito/{contaOrigem}")
+    public ResponseEntity depositar(@PathVariable Integer contaOrigem, @RequestParam Double valor, @RequestParam Integer contaDestino) {
+        try {
+
+        } catch (Exception e) {
+
+        }
+        return ResponseEntity.ok().build();
+    }
 }
