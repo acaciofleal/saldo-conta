@@ -4,8 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Table(name = "contabancaria")
-@Entity
+@Entity(name = "contabancaria")
 @Getter
 @Setter
 @AllArgsConstructor
