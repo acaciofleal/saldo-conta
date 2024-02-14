@@ -145,6 +145,6 @@
                     <locations>classpath:db/migration</locations>
                 </configuration>
             </plugin>
-            </plugins>
+        </plugins>
     </build>
 </project>

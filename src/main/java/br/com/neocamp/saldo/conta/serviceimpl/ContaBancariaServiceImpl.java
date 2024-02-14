@@ -5,6 +5,7 @@ import br.com.neocamp.saldo.conta.exception.ContaBancariaNotFoundException;
 import br.com.neocamp.saldo.conta.exception.SaldoInsuficienteException;
 import br.com.neocamp.saldo.conta.repository.ContaBancariaRepository;
 import br.com.neocamp.saldo.conta.service.ContaBancariaService;
+import br.com.neocamp.saldo.conta.validador.ValidaContaBancaria;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,23 +21,18 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
     ContaBancariaRepository repository;
 
     @Override
-    public void sacar(Integer numeroConta, Double valor) throws SaldoInsuficienteException, ContaBancariaNotFoundException {Optional<ContaBancaria> conta = repository.findById(numeroConta);
-        
+    public void sacar(Integer numeroConta, Double valor) throws SaldoInsuficienteException, ContaBancariaNotFoundException {
+
+        Optional<ContaBancaria> conta = repository.findById(numeroConta);
+
         ContaBancaria contaBancaria;
 
-        if(conta.isPresent())  {
-           contaBancaria = conta.get();
-        } else {
-            throw new ContaBancariaNotFoundException("Conta inexistente");
-        }
+        ValidaContaBancaria.validaSeContaExiste(conta, "Conta inexistente");
 
-        if (valor <= 0) {
-            throw new IllegalArgumentException("A quantia deve ser maior que zero.");
-        }
+        contaBancaria = conta.get();
 
-        if (valor > contaBancaria.getSaldo()) {
-            throw new SaldoInsuficienteException("Saldo insuficiente para realizar o saque.");
-        }
+        ValidaContaBancaria.validaValorNuloOuNegativo(valor);
+        ValidaContaBancaria.validaSaldoSuficiente(valor, contaBancaria.getSaldo());
 
         contaBancaria.setSaldo(contaBancaria.getSaldo()-valor);
         repository.save(contaBancaria);
@@ -44,7 +40,40 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
 
     @Override
     public void depositar(Integer numeroConta, Double valor) {
+        Optional<ContaBancaria> contaBancaria = repository.findById(numeroConta);
+        ContaBancaria conta;
 
+        ValidaContaBancaria.validaSeContaExiste(contaBancaria, "Conta inexistente");
+        conta = contaBancaria.get();
+
+        ValidaContaBancaria.validaValorNuloOuNegativo(valor);
+        conta.setSaldo(conta.getSaldo() + valor);
+        repository.save(conta);
+    }
+
+    @Override
+    public ContaBancaria transferir(Integer numContaOrigem, Integer numContaDestino, Double valor) {
+        Optional<ContaBancaria> contaO = repository.findById(numContaOrigem);
+        Optional<ContaBancaria> contaD = repository.findById(numContaDestino);
+        ContaBancaria contaOrigem, contaDestino;
+
+        ValidaContaBancaria.validaSeContaExiste(contaO, "Conta de origem inexistente");
+        ValidaContaBancaria.validaSeContaExiste(contaD, "Conta de destino inexistente");
+
+        contaOrigem = contaO.get();
+        contaDestino = contaD.get();
+
+        ValidaContaBancaria.validaValorNuloOuNegativo(valor);
+
+        ValidaContaBancaria.validaSaldoSuficiente(valor, contaOrigem.getSaldo());
+
+        contaOrigem.setSaldo(contaOrigem.getSaldo() - valor);
+        contaDestino.setSaldo(contaDestino.getSaldo() + valor);
+
+        repository.save(contaOrigem);
+        repository.save(contaDestino);
+
+        return contaOrigem;
     }
 
     @Override
