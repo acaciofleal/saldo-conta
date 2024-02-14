@@ -63,4 +63,15 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
         return repository.save(contaBancaria);
 
     }
+
+    @Override
+    public ContaBancaria buscarConta(Integer numeroConta) throws ContaBancariaNotFoundException {
+        Optional<ContaBancaria> optionalConta = repository.findById(numeroConta);
+        if (optionalConta.isPresent()) {
+            return optionalConta.get();
+        } else {
+            throw new ContaBancariaNotFoundException("Conta bancária: " + numeroConta + " não foi encontrada." );
+        }
+    }
+
 }

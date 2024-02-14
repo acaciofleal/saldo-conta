@@ -8,4 +8,6 @@ public interface ContaBancariaService {
     public Double consultarSaldo(Integer numeroConta);
 
     ContaBancaria criarConta(Double valor);
+
+    ContaBancaria buscarConta(Integer numeroConta);
 }
