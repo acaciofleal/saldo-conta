@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -81,6 +80,16 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
             throw new ContaBancariaNotFoundException("Nenhuma conta bancária foi criada no sistema.");
         }
         return contas;
+    }
+
+    @Override
+    public void excluirConta(Integer numeroConta) throws ContaBancariaNotFoundException {
+        Optional<ContaBancaria> optionalConta = repository.findById(numeroConta);
+        if (optionalConta.isPresent()) {
+            repository.delete(optionalConta.get());
+        } else {
+            throw new ContaBancariaNotFoundException("Conta bancária: " + numeroConta + " não foi encontrada." );
+        }
     }
 
 }

@@ -57,4 +57,14 @@ public class ContaBancariaController {
         }
     }
 
+    @DeleteMapping("/{numeroConta}")
+    public ResponseEntity<String> excluirConta(@PathVariable Integer numeroConta) {
+        try {
+            service.excluirConta(numeroConta);
+            return ResponseEntity.ok("Conta excluída com sucesso!");
+        } catch (ContaBancariaNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
