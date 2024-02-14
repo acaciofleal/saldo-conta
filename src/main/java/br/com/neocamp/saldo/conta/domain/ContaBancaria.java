@@ -2,10 +2,7 @@ package br.com.neocamp.saldo.conta.domain;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Table(name = "contabancaria")
 @Entity
@@ -16,6 +13,7 @@ import javax.persistence.Table;
 @Builder
 public class ContaBancaria {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer numeroConta;
 
     @Column
