@@ -1,4 +1,2 @@
 # saldo-conta
-Exercicio de treinamento de conceitos de Excecoes
- 
-Teste Vitor
+Exercicio de treinamento de conceitos de Excecoes e de implementação de uma API. 
