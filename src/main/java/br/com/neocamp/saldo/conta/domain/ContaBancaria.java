@@ -1,15 +1,16 @@
 package br.com.neocamp.saldo.conta.domain;
 
+import jakarta.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
+//import javax.persistence.*;
 
-@Entity(name = "contabancaria")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Entity(name = "contabancaria")
 public class ContaBancaria {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
