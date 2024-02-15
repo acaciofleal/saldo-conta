@@ -20,6 +20,10 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
     @Autowired
     ContaBancariaRepository repository;
 
+    public ContaBancariaServiceImpl(ContaBancariaRepository contaBancariaRepository) {
+        repository = contaBancariaRepository;
+    }
+
     @Override
     public void sacar(Integer numeroConta, Double valor) throws SaldoInsuficienteException, ContaBancariaNotFoundException {
 

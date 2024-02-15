@@ -20,8 +20,11 @@ import java.util.List;
 @RequestMapping(value = "/v1/conta-bancaria")
 public class ContaBancariaController {
 
-    @Autowired
     ContaBancariaService service;
+
+    public ContaBancariaController(ContaBancariaService contaBancariaService) {
+        service = contaBancariaService;
+    }
 
     @PostMapping()
     public ResponseEntity<ContaBancaria> criarConta(@RequestBody ContaBancariaRequestDTO contaBancariaRequestDTO) {
