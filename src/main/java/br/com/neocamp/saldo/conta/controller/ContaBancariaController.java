@@ -19,7 +19,6 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/v1/conta-bancaria")
 public class ContaBancariaController {
-
     ContaBancariaService service;
 
     public ContaBancariaController(ContaBancariaService contaBancariaService) {
@@ -76,15 +75,15 @@ public class ContaBancariaController {
 
 
     @PutMapping("/deposito/{numeroConta}")
-    public ResponseEntity<String> depositar(@PathVariable Integer numeroConta, @RequestParam Double valor) {
+    public ResponseEntity<Object> depositar(@PathVariable Integer numeroConta, @RequestParam Double valor) {
         try {
-            service.depositar(numeroConta, valor);
-            return ResponseEntity.ok("Deposito realizado com sucesso!");
+            ContaBancaria conta = service.depositar(numeroConta, valor);
+            return ResponseEntity.ok(conta);
         } catch (ValorInvalidoException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 
         } catch (ContaBancariaNotFoundException e) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
