@@ -43,7 +43,7 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
     }
 
     @Override
-    public void depositar(Integer numeroConta, Double valor) {
+    public ContaBancaria depositar(Integer numeroConta, Double valor) {
         Optional<ContaBancaria> contaBancaria = repository.findById(numeroConta);
         ContaBancaria conta;
 
@@ -53,10 +53,13 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
         ValidaContaBancaria.validaValorNuloOuNegativo(valor);
         conta.setSaldo(conta.getSaldo() + valor);
         repository.save(conta);
+        return conta;
     }
 
     @Override
     public ContaBancaria transferir(Integer numContaOrigem, Integer numContaDestino, Double valor) {
+        ValidaContaBancaria.validaContasDiferentes(numContaOrigem, numContaDestino);
+
         Optional<ContaBancaria> contaO = repository.findById(numContaOrigem);
         Optional<ContaBancaria> contaD = repository.findById(numContaDestino);
         ContaBancaria contaOrigem, contaDestino;
