@@ -142,6 +142,8 @@ public class ContaBancariaServiceImplTest {
         assertEquals(100.0, conta.getSaldo());
     }
 
+
+
     @DisplayName("Buscar conta inexistente")
     @Test
     public void testBuscarContaInexistente() {
@@ -157,4 +159,6 @@ public class ContaBancariaServiceImplTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> contaBancariaService.buscarConta(null));
         assertEquals("Número da conta não pode ser nulo", exception.getMessage());
     }
+
+
 }
