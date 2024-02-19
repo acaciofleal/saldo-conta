@@ -1,5 +1,6 @@
 package br.com.neocamp.saldo.conta.serviceimpl;
 
+import br.com.neocamp.saldo.conta.util.Constantes;
 import br.com.neocamp.saldo.conta.domain.ContaBancaria;
 import br.com.neocamp.saldo.conta.exception.ContaBancariaNotFoundException;
 import br.com.neocamp.saldo.conta.exception.SaldoInsuficienteException;
@@ -31,7 +32,7 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
 
         ContaBancaria contaBancaria;
 
-        ValidaContaBancaria.validaSeContaExiste(conta, "Conta inexistente");
+        ValidaContaBancaria.validaSeContaExiste(conta, Constantes.ERROR_CONTA_INEXISTENTE);
 
         contaBancaria = conta.get();
 
@@ -46,8 +47,8 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
     public ContaBancaria depositar(Integer numeroConta, Double valor) {
         Optional<ContaBancaria> contaBancaria = repository.findById(numeroConta);
         ContaBancaria conta;
-
-        ValidaContaBancaria.validaSeContaExiste(contaBancaria, "Conta inexistente");
+        
+        ValidaContaBancaria.validaSeContaExiste(contaBancaria, Constantes.ERROR_CONTA_INEXISTENTE);
         conta = contaBancaria.get();
 
         ValidaContaBancaria.validaValorNuloOuNegativo(valor);
@@ -64,8 +65,8 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
         Optional<ContaBancaria> contaD = repository.findById(numContaDestino);
         ContaBancaria contaOrigem, contaDestino;
 
-        ValidaContaBancaria.validaSeContaExiste(contaO, "Conta de origem inexistente");
-        ValidaContaBancaria.validaSeContaExiste(contaD, "Conta de destino inexistente");
+        ValidaContaBancaria.validaSeContaExiste(contaO, Constantes.ERROR_CONTA_ORIGEM_INEXISTENTE);
+        ValidaContaBancaria.validaSeContaExiste(contaD, Constantes.ERROR_CONTA_DESTINO_INEXISTENTE);
 
         contaOrigem = contaO.get();
         contaDestino = contaD.get();
@@ -91,7 +92,7 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
     @Override
     public ContaBancaria criarConta(Double valor) {
         if (valor < 50) {
-            throw new IllegalArgumentException("Valor minimo exigido para abertura de conta é R$50,00.");
+            throw new IllegalArgumentException(Constantes.ERROR_VALOR_MINIMO_ABERTURA_CONTA);
         }
         ContaBancaria contaBancaria = new ContaBancaria();
         contaBancaria.setSaldo(valor);
@@ -103,7 +104,7 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
     @Override
     public ContaBancaria buscarConta(Integer numeroConta) {
         if (numeroConta == null) {
-            throw new IllegalArgumentException("Número da conta não pode ser nulo");
+            throw new IllegalArgumentException(Constantes.ERROR_NUMERO_CONTA_NULO);
         }
         Optional<ContaBancaria> optionalConta = repository.findById(numeroConta);
         if (optionalConta.isPresent()) {
@@ -117,7 +118,7 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
     public List<ContaBancaria> buscarContas() {
         List<ContaBancaria> contas = repository.findAll();
         if (contas.isEmpty()) {
-            throw new ContaBancariaNotFoundException("Nenhuma conta bancária foi criada no sistema.");
+            throw new ContaBancariaNotFoundException(Constantes.ERROR_SEM_CONTAS);
         }
         return contas;
     }
