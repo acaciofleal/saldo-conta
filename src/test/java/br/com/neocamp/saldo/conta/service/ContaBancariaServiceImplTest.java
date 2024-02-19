@@ -7,6 +7,7 @@ import br.com.neocamp.saldo.conta.exception.SaldoInsuficienteException;
 import br.com.neocamp.saldo.conta.exception.ValorInvalidoException;
 import br.com.neocamp.saldo.conta.repository.ContaBancariaRepository;
 import br.com.neocamp.saldo.conta.serviceimpl.ContaBancariaServiceImpl;
+import br.com.neocamp.saldo.conta.util.Constantes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -61,7 +62,7 @@ public class ContaBancariaServiceImplTest {
                 .thenReturn(Optional.of(new ContaBancaria(2, 300.00)));
 
         ContaBancariaNotFoundException exception = assertThrows(ContaBancariaNotFoundException.class, () -> contaBancariaService.transferir(1,2, 50.00));
-        assertEquals("Conta de origem inexistente", exception.getMessage());
+        assertEquals(Constantes.ERROR_CONTA_ORIGEM_INEXISTENTE, exception.getMessage());
     }
 
     @DisplayName("Transferencia conta destino inexistente")
@@ -72,14 +73,14 @@ public class ContaBancariaServiceImplTest {
                 .thenReturn(Optional.empty());
 
         ContaBancariaNotFoundException exception = assertThrows(ContaBancariaNotFoundException.class, () -> contaBancariaService.transferir(1,2, 50.00));
-        assertEquals("Conta de destino inexistente", exception.getMessage());
+        assertEquals(Constantes.ERROR_CONTA_DESTINO_INEXISTENTE, exception.getMessage());
     }
 
     @DisplayName("Transferencia para a mesma conta")
     @Test
     public void testTransferirMesmaConta() {
         MesmaContaException exception = assertThrows(MesmaContaException.class, () -> contaBancariaService.transferir(1,1, 50.00));
-        assertEquals("Contas iguais, impossivel fazer transferencia", exception.getMessage());
+        assertEquals(Constantes.ERROR_CONTA_ORIGEM_DESTINO_IGUAIS, exception.getMessage());
     }
 
     @DisplayName("Transferencia valor de transferencia invalido")
@@ -108,8 +109,8 @@ public class ContaBancariaServiceImplTest {
         when(contaBancariaRepository.findById(anyInt()))
                 .thenReturn(Optional.of(new ContaBancaria(1, 100.00)));
 
-        ContaBancaria conta = contaBancariaService.depositar(1, 200.0);
-        assertEquals(300.0, conta.getSaldo());
+        ContaBancaria conta = contaBancariaService.depositar(1, 0.1);
+        assertEquals(100.1, conta.getSaldo());
     }
 
     @DisplayName("Depositar em uma conta inexistente")
@@ -157,7 +158,7 @@ public class ContaBancariaServiceImplTest {
     @Test
     public void testBuscarContaNumeroContaNull() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> contaBancariaService.buscarConta(null));
-        assertEquals("Número da conta não pode ser nulo", exception.getMessage());
+        assertEquals(Constantes.ERROR_NUMERO_CONTA_NULO, exception.getMessage());
     }
 
 
