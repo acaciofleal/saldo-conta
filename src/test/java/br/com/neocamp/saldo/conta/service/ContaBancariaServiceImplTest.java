@@ -129,4 +129,32 @@ public class ContaBancariaServiceImplTest {
 
         assertThrows(ValorInvalidoException.class, () -> contaBancariaService.depositar(1, 0.0));
     }
+
+
+    @DisplayName("Buscar conta com sucesso")
+    @Test
+    public void testBuscarConta() {
+        when(contaBancariaRepository.findById(anyInt()))
+                .thenReturn(Optional.of(new ContaBancaria(1, 100.00)));
+
+        ContaBancaria conta = contaBancariaService.buscarConta(1);
+        assertEquals(1, conta.getNumeroConta());
+        assertEquals(100.0, conta.getSaldo());
+    }
+
+    @DisplayName("Buscar conta inexistente")
+    @Test
+    public void testBuscarContaInexistente() {
+        when(contaBancariaRepository.findById(anyInt()))
+                .thenReturn(Optional.empty());
+
+        assertThrows(ContaBancariaNotFoundException.class, () -> contaBancariaService.buscarConta(1));
+    }
+
+    @DisplayName("Buscar conta com número de conta nulo")
+    @Test
+    public void testBuscarContaNumeroContaNull() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> contaBancariaService.buscarConta(null));
+        assertEquals("Número da conta não pode ser nulo", exception.getMessage());
+    }
 }
