@@ -23,6 +23,8 @@ import static org.mockito.Mockito.*;
 public class ContaBancariaServiceImplTest {
     ContaBancariaRepository contaBancariaRepository;
     ContaBancariaServiceImpl contaBancariaService;
+
+
     @BeforeEach
     public void setup() {
         contaBancariaRepository = mock(ContaBancariaRepository.class);
@@ -144,7 +146,6 @@ public class ContaBancariaServiceImplTest {
     }
 
 
-
     @DisplayName("Buscar conta inexistente")
     @Test
     public void testBuscarContaInexistente() {
@@ -160,6 +161,54 @@ public class ContaBancariaServiceImplTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> contaBancariaService.buscarConta(null));
         assertEquals(Constantes.ERROR_NUMERO_CONTA_NULO, exception.getMessage());
     }
+
+
+    @DisplayName("Testar sacar com sucesso")
+    @Test
+    public void testSacarComSucesso(){
+
+        Integer numeroConta = anyInt();
+
+        ContaBancaria contaBancaria = new ContaBancaria(numeroConta, 100.00);
+
+        Double valor = 40.00;
+
+        Double saldoEsperado = 60.00;
+
+        //simula o acesso ao banco de dados
+        when(contaBancariaRepository.findById(numeroConta)).
+                thenReturn(Optional.of(contaBancaria));
+
+        when(contaBancariaRepository.save(contaBancaria)).thenReturn(contaBancaria);
+
+        contaBancariaService.sacar(numeroConta, valor);
+
+        assertEquals(contaBancaria.getSaldo(), saldoEsperado);
+
+    }
+
+    @DisplayName("Tentar sacar com saldo insuficiente")
+    @Test
+    public void tentarSacarComSaldoInsuficiente(){
+
+        Integer numeroConta = anyInt();
+
+        ContaBancaria contaBancaria = new ContaBancaria(numeroConta, 100.00);
+
+        Double valor = 110.00;
+
+        //simula o acesso ao banco de dados
+        when(contaBancariaRepository.findById(numeroConta)).
+                thenReturn(Optional.of(contaBancaria));
+
+        SaldoInsuficienteException exception = assertThrows(SaldoInsuficienteException.class, () -> contaBancariaService.sacar(numeroConta, valor));
+        assertEquals(Constantes.ERROR_SALDO_INSUFICIENTE, exception.getMessage());
+
+
+    }
+
+
+
 
 
 }
