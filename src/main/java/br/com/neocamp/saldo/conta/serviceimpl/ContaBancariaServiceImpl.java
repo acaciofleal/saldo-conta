@@ -32,7 +32,7 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
         contaBancaria = conta.get();
 
         ValidaContaBancaria.validaValorNuloOuNegativo(valor);
-        ValidaContaBancaria.validaSaldoSuficiente(valor, contaBancaria.getSaldo());
+        ValidaContaBancaria.validaSaldoSuficiente(valor, contaBancaria.getSaldo(),"saldo insuficiente para operacao");
 
         contaBancaria.setSaldo(contaBancaria.getSaldo()-valor);
         repository.save(contaBancaria);
@@ -65,7 +65,7 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
 
         ValidaContaBancaria.validaValorNuloOuNegativo(valor);
 
-        ValidaContaBancaria.validaSaldoSuficiente(valor, contaOrigem.getSaldo());
+        ValidaContaBancaria.validaSaldoSuficiente(valor, contaOrigem.getSaldo(),"saldo insulficiente para operacao");
 
         contaOrigem.setSaldo(contaOrigem.getSaldo() - valor);
         contaDestino.setSaldo(contaDestino.getSaldo() + valor);

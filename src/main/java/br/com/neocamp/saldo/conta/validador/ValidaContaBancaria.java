@@ -20,9 +20,9 @@ public class ValidaContaBancaria {
         }
     }
 
-    public static void validaSaldoSuficiente(Double valor, Double saldo) {
+    public static void validaSaldoSuficiente(Double valor, Double saldo, String mensagem) {
         if (valor > saldo) {
-            throw new SaldoInsuficienteException("Saldo insuficiente para realizar a transferencia");
+            throw new SaldoInsuficienteException(mensagem);
         }
     }
 }

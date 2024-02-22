@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -54,9 +55,9 @@ public class ContaBancariaController {
             service.sacar(numeroConta, valor);
             return ResponseEntity.ok("Saque realizado com sucesso!");
         } catch (ContaBancariaNotFoundException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("conta inexistente");
         } catch (SaldoInsuficienteException e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Saldo insuficiente");
         }
     }
 
@@ -98,5 +99,18 @@ public class ContaBancariaController {
         }
     }
 
+    @GetMapping("/contaZero")
+    public ResponseEntity<List<ContaBancaria>> buscarContasSaldoZero() {
+        List<ContaBancaria> valorDaContas = service.buscarContas();
+        List<ContaBancaria> contasSaldoZero = new ArrayList<>();
+        for (int i = 0; i < valorDaContas.size(); i++) {
+            ContaBancaria elemento = valorDaContas.get(i);
+
+            if (elemento.getSaldo()==0){
+                contasSaldoZero.add(elemento);
+            }
+        }
+        return ResponseEntity.ok(contasSaldoZero);
+    }
 
 }
