@@ -1,4 +1,4 @@
-package br.com.neocamp.saldo.conta;
+package br.com.neocamp.saldo.conta.util;
 
 import br.com.neocamp.saldo.conta.dto.UsuarioJSONPlaceHolderDTO;
 import br.com.neocamp.saldo.conta.dto.UsuarioTaskDTO;

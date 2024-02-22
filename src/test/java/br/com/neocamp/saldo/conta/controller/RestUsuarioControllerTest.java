@@ -1,6 +1,6 @@
 package br.com.neocamp.saldo.conta.controller;
 
-import br.com.neocamp.saldo.conta.TestUtils;
+import br.com.neocamp.saldo.conta.util.TestUtils;
 import br.com.neocamp.saldo.conta.dto.UsuarioJSONPlaceHolderDTO;
 import br.com.neocamp.saldo.conta.exception.ErroAcessarAPITasksException;
 import br.com.neocamp.saldo.conta.exception.ErroAcessarAPIjsonplaceholderException;
@@ -12,11 +12,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.client.RestClientException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
