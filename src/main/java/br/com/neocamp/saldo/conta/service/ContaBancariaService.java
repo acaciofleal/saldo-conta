@@ -9,7 +9,7 @@ public interface ContaBancariaService {
     public void depositar(Integer numeroConta, Double valor);
     public Double consultarSaldo(Integer numeroConta);
 
-    ContaBancaria criarConta(Double valor);
+    ContaBancaria criarConta(ContaBancaria conta);
 
     ContaBancaria buscarConta(Integer numeroConta);
 

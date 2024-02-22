@@ -13,20 +13,40 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/v1/conta-bancaria")
+@RequestMapping(value = "/v1/conta-bancaria") //base url
 public class ContaBancariaController {
 
     @Autowired
     ContaBancariaService service;
 
     @PostMapping()
-    public ResponseEntity<ContaBancaria> criarConta(@RequestBody ContaBancariaRequestDTO contaBancariaRequestDTO) {
-        ContaBancaria contaBancaria = service.criarConta(contaBancariaRequestDTO.getValor());
-        return ResponseEntity.ok(contaBancaria);
+    public ResponseEntity<ContaBancaria> criarConta(@RequestBody @Valid ContaBancariaRequestDTO contaBancariaRequestDTO) {
+        ContaBancaria contaBancaria = new ContaBancaria();
+        contaBancaria.setSaldo(contaBancariaRequestDTO.getSaldo());
+        contaBancaria.setNumeroConta(contaBancariaRequestDTO.getNumeroConta());
+        contaBancaria.setTitular(contaBancariaRequestDTO.getTitular());
+        contaBancaria.setTipo(contaBancariaRequestDTO.getTipo());
+
+        ContaBancaria novaContaBancaria = service.criarConta(contaBancaria);
+        return new ResponseEntity<>(novaContaBancaria, HttpStatus.CREATED);
+        //return ResponseEntity.ok(contaBancaria);
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<ContaBancaria>> buscarContas() {
+        List<ContaBancaria> contas = service.buscarContas();
+        if (!contas.isEmpty()) {
+            return ResponseEntity.ok(contas);
+        } else {
+            //return new ResponseEntity<>("conta nao encontrada", HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/{numeroConta}")
@@ -39,15 +59,6 @@ public class ContaBancariaController {
         }
     }
 
-    @GetMapping()
-    public ResponseEntity<List<ContaBancaria>> buscarContas() {
-        List<ContaBancaria> contas = service.buscarContas();
-        if (!contas.isEmpty()) {
-            return ResponseEntity.ok(contas);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
     @PutMapping("/saque/{numeroConta}")
     public ResponseEntity<String> sacar(@PathVariable Integer numeroConta, @RequestParam Double valor) {
         try {
