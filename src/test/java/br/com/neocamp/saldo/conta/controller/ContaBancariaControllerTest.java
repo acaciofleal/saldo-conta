@@ -12,6 +12,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -26,6 +29,27 @@ public class ContaBancariaControllerTest {
         contaBancariaService = mock(ContaBancariaService.class);
         contaBancariaController = new ContaBancariaController(contaBancariaService);
     };
+
+
+    @Test
+    public void buscarContasSaldoZero() {
+       List<ContaBancaria> contas = new ArrayList<>();
+       ContaBancaria conta1 = new ContaBancaria(1, "12345", "Corrente", "Ariane", 300.00);
+       ContaBancaria conta2 = new ContaBancaria(2, "12346", "Corrente", "Layse", 0.00);
+       contas.add(conta1);
+       contas.add(conta2);
+       when(contaBancariaService.buscarContas())
+               .thenReturn(contas);
+
+       ResponseEntity<List<ContaBancaria>> response = contaBancariaController.buscarContasSaldoZero();
+       List<ContaBancaria> result = new ArrayList<>();
+       result.add(conta2);
+
+       assertEquals(HttpStatus.OK, response.getStatusCode());
+       assertEquals(result, response.getBody());
+
+
+    }
 
     @DisplayName("Depositar com sucesso")
     @Test

@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -62,6 +63,24 @@ public class ContaBancariaController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/contaZero")
+    public ResponseEntity<List<ContaBancaria>> buscarContasSaldoZero() {
+        List<ContaBancaria> valorDaContas = service.buscarContas();
+        List<ContaBancaria> contasSaldoZero = new ArrayList<>();
+        for (int i = 0; i < valorDaContas.size(); i++) {
+            ContaBancaria elemento = valorDaContas.get(i);
+
+            if (elemento.getSaldo()==0){
+                contasSaldoZero.add(elemento);
+            }
+        }
+        return ResponseEntity.ok(contasSaldoZero);
+    }
+
+
+
+
     @PutMapping("/saque/{numeroConta}")
     public ResponseEntity<String> sacar(@PathVariable Integer numeroConta, @RequestParam Double valor) {
         try {
@@ -111,6 +130,9 @@ public class ContaBancariaController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+
+
 
 
 }
