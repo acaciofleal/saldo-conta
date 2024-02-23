@@ -21,7 +21,7 @@ import java.util.List;
 @RequestMapping(value = "/v1/conta-bancaria")
 public class ContaBancariaController {
 
-    @Autowired
+    @Autowired //Significa que o Spring vai injetar a dependência
     ContaBancariaService service;
 
     public ContaBancariaController(ContaBancariaService contaBancariaService) {

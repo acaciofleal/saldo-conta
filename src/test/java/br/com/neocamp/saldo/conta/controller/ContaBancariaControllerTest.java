@@ -69,6 +69,7 @@ public class ContaBancariaControllerTest {
         ResponseEntity<Object> response = contaBancariaController.transferir(1, new TransferenciaRequestDTO(2, 45.00));
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
+//        assertEquals("Transferencia realizada com sucesso!", response.getBody().toString());
     }
 
     @DisplayName("Transferir com alguma conta inexistente")
@@ -91,6 +92,7 @@ public class ContaBancariaControllerTest {
         ResponseEntity<Object> response = contaBancariaController.transferir(1, new TransferenciaRequestDTO(2, 4500.00));
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+//        assertEquals("Saldo insuficiente", response.getBody());
     }
 
     @DisplayName("Transferir com valor invalido")
@@ -102,5 +104,8 @@ public class ContaBancariaControllerTest {
         ResponseEntity<Object> response = contaBancariaController.transferir(1, new TransferenciaRequestDTO(2, -45.00));
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+//        assertEquals("Valor invalido", response.getBody()
+
+
     }
 }
