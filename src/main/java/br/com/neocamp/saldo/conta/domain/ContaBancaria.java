@@ -14,7 +14,18 @@ import lombok.*;
 public class ContaBancaria {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer numeroConta;
+    private Integer id;
+
+    @Column (name = "numero_conta")
+    private String numeroConta;
+
+
+    @Column
+    private String tipo;
+
+    @Column
+    private String titular;
+
 
     @Column
     private Double saldo;

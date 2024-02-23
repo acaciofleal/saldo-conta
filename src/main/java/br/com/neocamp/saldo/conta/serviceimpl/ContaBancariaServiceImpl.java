@@ -89,16 +89,17 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
         return null;
     }
 
+
     @Override
-    public ContaBancaria criarConta(Double valor) {
-        if (valor < 50) {
+    public ContaBancaria criarConta(ContaBancaria conta) {
+        if (conta.getSaldo() < 50) {
             throw new IllegalArgumentException(Constantes.ERROR_VALOR_MINIMO_ABERTURA_CONTA);
         }
-        ContaBancaria contaBancaria = new ContaBancaria();
-        contaBancaria.setSaldo(valor);
-        return repository.save(contaBancaria);
-
+        return repository.save(conta);
     }
+
+
+
 
 
     @Override
