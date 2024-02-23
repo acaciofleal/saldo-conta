@@ -31,7 +31,7 @@ public class ContaBancariaControllerTest {
     @Test
     public void testDepositar() {
         when(contaBancariaService.depositar(anyInt(), anyDouble()))
-                .thenReturn(new ContaBancaria(1, 97.0));
+                .thenReturn(new ContaBancaria());
 
         ResponseEntity<Object> response = contaBancariaController.depositar(2, 47.00);
 
@@ -64,7 +64,7 @@ public class ContaBancariaControllerTest {
     @Test
     public void testTransferir() {
         when(contaBancariaService.transferir(anyInt(), anyInt(), anyDouble()))
-                .thenReturn(new ContaBancaria(1, 5.0));
+                .thenReturn(new ContaBancaria());
 
         ResponseEntity<Object> response = contaBancariaController.transferir(1, new TransferenciaRequestDTO(2, 45.00));
 

@@ -40,7 +40,7 @@ class ContaBancariaTest {
 //        assertThrows(IllegalArgumentException.class, () -> contaBancaria.sacar(-100));
 //    }
 
-    private ContaBancaria criarContaBancaria() {
-        return new ContaBancaria(12345, 1000.00);
-    }
+//    private ContaBancaria criarContaBancaria() {
+//        return new ContaBancaria(12345, 1000.00);
+//    }
 }

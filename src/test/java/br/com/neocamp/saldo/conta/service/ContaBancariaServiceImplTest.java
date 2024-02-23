@@ -35,10 +35,10 @@ public class ContaBancariaServiceImplTest {
     @DisplayName("Criar conta com sucesso")
     @Test
     public void testCriarConta() {
-        when(contaBancariaRepository.save(any(ContaBancaria.class))).thenReturn(new ContaBancaria(1, 51.00));
-        ContaBancaria contaBancaria = contaBancariaService.criarConta(51.00);
+        when(contaBancariaRepository.save(any(ContaBancaria.class))).thenReturn(new ContaBancaria(1, "12345", "Corrente", "Ariane", 51.00));
+        ContaBancaria contaBancaria = contaBancariaService.criarConta(new ContaBancaria(1, "12345", "Corrente", "Ariane", 51.00));
 
-        assertEquals(1, contaBancaria.getNumeroConta());
+        assertEquals("12345", contaBancaria.getNumeroConta());
         assertEquals(51.00, contaBancaria.getSaldo());
     };
 
@@ -46,14 +46,14 @@ public class ContaBancariaServiceImplTest {
     @Test
     public void testTransferir() {
         when(contaBancariaRepository.findById(anyInt()))
-                .thenReturn(Optional.of(new ContaBancaria(1, 100.00)))
-                .thenReturn(Optional.of(new ContaBancaria(2, 300.00)));
+                .thenReturn(Optional.of(new ContaBancaria(1, "12345", "Corrente", "Ariane", 100.00)))
+                .thenReturn(Optional.of(new ContaBancaria(2, "12346", "Corrente", "Layse", 300.00)));
         when(contaBancariaRepository.save(any(ContaBancaria.class)))
-                .thenReturn(new ContaBancaria(1, 100.00));
+                .thenReturn(new ContaBancaria(1, "12345", "Corrente", "Ariane", 75.00));
 
-        ContaBancaria contaBancaria = contaBancariaService.transferir(1, 2, 25.00);
+        ContaBancaria contaBancaria = contaBancariaService.transferir(1,2, 25.00);
 
-        assertEquals(75.00 ,contaBancaria.getSaldo());
+        assertEquals(  75.00, contaBancaria.getSaldo());
     }
 
     @DisplayName("Transferencia conta origem inexistente")
@@ -61,7 +61,7 @@ public class ContaBancariaServiceImplTest {
     public void testTransferirContaOrigemInexistente() {
         when(contaBancariaRepository.findById(anyInt()))
                 .thenReturn(Optional.empty())
-                .thenReturn(Optional.of(new ContaBancaria(2, 300.00)));
+                .thenReturn(Optional.of(new ContaBancaria(2, "12360", "Corrente", "Maria", 300.00)));
 
         ContaBancariaNotFoundException exception = assertThrows(ContaBancariaNotFoundException.class, () -> contaBancariaService.transferir(1,2, 50.00));
         assertEquals(Constantes.ERROR_CONTA_ORIGEM_INEXISTENTE, exception.getMessage());
@@ -71,7 +71,7 @@ public class ContaBancariaServiceImplTest {
     @Test
     public void testTransferirContaDestinoInexistente() {
         when(contaBancariaRepository.findById(anyInt()))
-                .thenReturn(Optional.of(new ContaBancaria(1, 300.00)))
+                .thenReturn(Optional.of(new ContaBancaria(1, "12345", "Corrente", "Mariana", 100.00)))
                 .thenReturn(Optional.empty());
 
         ContaBancariaNotFoundException exception = assertThrows(ContaBancariaNotFoundException.class, () -> contaBancariaService.transferir(1,2, 50.00));
@@ -89,8 +89,8 @@ public class ContaBancariaServiceImplTest {
     @Test
     public void testTransferirValorInvalido() {
         when(contaBancariaRepository.findById(anyInt()))
-                .thenReturn(Optional.of(new ContaBancaria(1, 100.00)))
-                .thenReturn(Optional.of(new ContaBancaria(2, 300.00)));
+                .thenReturn(Optional.of(new ContaBancaria(1, "12345", "Corrente", "Mariana", 100.00)))
+                .thenReturn(Optional.of(new ContaBancaria(2, "12347", "Corrente", "Mariana", 50.00)));
 
         assertThrows(ValorInvalidoException.class, () -> contaBancariaService.transferir(1,2, -50.00));
     }
@@ -99,8 +99,8 @@ public class ContaBancariaServiceImplTest {
     @Test
     public void testTransferirSaldoInsuficiente() {
         when(contaBancariaRepository.findById(anyInt()))
-                .thenReturn(Optional.of(new ContaBancaria(1, 100.00)))
-                .thenReturn(Optional.of(new ContaBancaria(2, 300.00)));
+                .thenReturn(Optional.of(new ContaBancaria(1, "12345", "Corrente", "Mariana", 100.00)))
+                .thenReturn(Optional.of(new ContaBancaria(2, "12347", "Corrente", "Mariana", 50.00)));
 
         assertThrows(SaldoInsuficienteException.class, () -> contaBancariaService.transferir(1,2, 150.00));
     }
@@ -109,7 +109,7 @@ public class ContaBancariaServiceImplTest {
     @Test
     public void testDepositar() {
         when(contaBancariaRepository.findById(anyInt()))
-                .thenReturn(Optional.of(new ContaBancaria(1, 100.00)));
+                .thenReturn(Optional.of(new ContaBancaria(1, "12345", "Corrente", "Mariana", 100.00)));
 
         ContaBancaria conta = contaBancariaService.depositar(1, 0.1);
         assertEquals(100.1, conta.getSaldo());
@@ -128,7 +128,7 @@ public class ContaBancariaServiceImplTest {
     @Test
     public void testDepositarValorInvalido() {
         when(contaBancariaRepository.findById(anyInt()))
-                .thenReturn(Optional.of(new ContaBancaria(1, 100.00)));
+                .thenReturn(Optional.of(new ContaBancaria(7, "12347", "Corrente", "Henrrique", 100.00)));
 
         assertThrows(ValorInvalidoException.class, () -> contaBancariaService.depositar(1, 0.0));
     }
@@ -138,10 +138,10 @@ public class ContaBancariaServiceImplTest {
     @Test
     public void testBuscarConta() {
         when(contaBancariaRepository.findById(anyInt()))
-                .thenReturn(Optional.of(new ContaBancaria(1, 100.00)));
+                .thenReturn(Optional.of(new ContaBancaria(1, "12345", "Corrente", "Mariana", 100.00)));
 
         ContaBancaria conta = contaBancariaService.buscarConta(1);
-        assertEquals(1, conta.getNumeroConta());
+        assertEquals("12345", conta.getNumeroConta());
         assertEquals(100.0, conta.getSaldo());
     }
 
@@ -169,7 +169,7 @@ public class ContaBancariaServiceImplTest {
 
         Integer numeroConta = anyInt();
 
-        ContaBancaria contaBancaria = new ContaBancaria(numeroConta, 100.00);
+        ContaBancaria contaBancaria = new ContaBancaria(1, "12345", "Corrente", "Mariana", 100.00);
 
         Double valor = 40.00;
 
@@ -193,7 +193,7 @@ public class ContaBancariaServiceImplTest {
 
         Integer numeroConta = anyInt();
 
-        ContaBancaria contaBancaria = new ContaBancaria(numeroConta, 100.00);
+        ContaBancaria contaBancaria = new ContaBancaria(1, "12345", "Corrente", "Mariana", 100.00);
 
         Double valor = 110.00;
 
