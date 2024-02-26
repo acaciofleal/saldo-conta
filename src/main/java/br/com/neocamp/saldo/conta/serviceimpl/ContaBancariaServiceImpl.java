@@ -103,11 +103,11 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
 
 
     @Override
-    public ContaBancaria buscarConta(Integer numeroConta) {
+    public ContaBancaria buscarConta(String numeroConta) {
         if (numeroConta == null) {
             throw new IllegalArgumentException(Constantes.ERROR_NUMERO_CONTA_NULO);
         }
-        Optional<ContaBancaria> optionalConta = repository.findById(numeroConta);
+        Optional<ContaBancaria> optionalConta = repository.findByNumeroConta(numeroConta);
         if (optionalConta.isPresent()) {
             return optionalConta.get();
         } else {
