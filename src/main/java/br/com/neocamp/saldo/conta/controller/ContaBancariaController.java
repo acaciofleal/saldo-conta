@@ -45,7 +45,7 @@ public class ContaBancariaController {
     }
 
     @GetMapping("/{numeroConta}")
-    public ResponseEntity<ContaBancaria> buscarConta(@PathVariable Integer numeroConta) {
+    public ResponseEntity<ContaBancaria> buscarConta(@PathVariable String numeroConta) {
         ContaBancaria contaBancaria = service.buscarConta(numeroConta);
         if (contaBancaria != null) {
             return ResponseEntity.ok(contaBancaria);

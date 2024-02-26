@@ -12,10 +12,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
@@ -134,25 +134,55 @@ public class ContaBancariaServiceImplTest {
     }
 
 
+
+
     @DisplayName("Buscar conta com sucesso")
     @Test
     public void testBuscarConta() {
-        when(contaBancariaRepository.findById(anyInt()))
-                .thenReturn(Optional.of(new ContaBancaria(1, "12345", "Corrente", "Mariana", 100.00)));
 
-        ContaBancaria conta = contaBancariaService.buscarConta(1);
-        assertEquals("12345", conta.getNumeroConta());
-        assertEquals(100.0, conta.getSaldo());
+        String numeroContaTest = "12345";
+        Double saldoTest = 200.00;
+
+        when(contaBancariaRepository.findByNumeroConta(numeroContaTest))
+                .thenReturn(Optional.of(new ContaBancaria(1, numeroContaTest, "Corrente", "Mariana", saldoTest)));
+
+        ContaBancaria conta = contaBancariaService.buscarConta(numeroContaTest);
+        assertEquals(numeroContaTest, conta.getNumeroConta());
+        assertEquals(saldoTest, conta.getSaldo());
     }
+
+
+    @DisplayName("Buscar todas as contas com sucesso")
+    @Test
+    public void buscarTodasAsContasComSucesso(){
+
+        when(contaBancariaRepository.findAll())
+                .thenReturn(List.of(new ContaBancaria(1, "12345", "Corrente", "Mariana", 100.00),
+                        new ContaBancaria(2, "12355", "Corrente", "Alessandra", 300.00)));
+
+
+      List<ContaBancaria> todasAsContas = contaBancariaService.buscarContas();
+
+      assertNotNull(todasAsContas);
+      assertEquals(todasAsContas.size(),2);
+
+
+
+    }
+
+
 
 
     @DisplayName("Buscar conta inexistente")
     @Test
     public void testBuscarContaInexistente() {
-        when(contaBancariaRepository.findById(anyInt()))
+
+        String numeroContaInexistenteTest = "1250";
+
+        when(contaBancariaRepository.findByNumeroConta(numeroContaInexistenteTest))
                 .thenReturn(Optional.empty());
 
-        assertThrows(ContaBancariaNotFoundException.class, () -> contaBancariaService.buscarConta(1));
+        assertThrows(ContaBancariaNotFoundException.class, () -> contaBancariaService.buscarConta(numeroContaInexistenteTest));
     }
 
     @DisplayName("Buscar conta com número de conta nulo")

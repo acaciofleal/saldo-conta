@@ -12,7 +12,7 @@ public interface ContaBancariaService {
 
     ContaBancaria criarConta(ContaBancaria conta);
 
-    ContaBancaria buscarConta(Integer numeroConta);
+    ContaBancaria buscarConta(String numeroConta);
 
     List<ContaBancaria> buscarContas();
 
