@@ -92,6 +92,7 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
 
     @Override
     public ContaBancaria criarConta(ContaBancaria conta) {
+
         if (conta.getSaldo() < 50) {
             throw new IllegalArgumentException(Constantes.ERROR_VALOR_MINIMO_ABERTURA_CONTA);
         }
