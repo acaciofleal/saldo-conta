@@ -4,6 +4,7 @@ import br.com.neocamp.saldo.conta.domain.ContaBancaria;
 import br.com.neocamp.saldo.conta.dto.ContaBancariaRequestDTO;
 import br.com.neocamp.saldo.conta.dto.TransferenciaRequestDTO;
 import br.com.neocamp.saldo.conta.exception.ContaBancariaNotFoundException;
+import br.com.neocamp.saldo.conta.exception.MesmaContaException;
 import br.com.neocamp.saldo.conta.exception.SaldoInsuficienteException;
 import br.com.neocamp.saldo.conta.exception.ValorInvalidoException;
 import br.com.neocamp.saldo.conta.service.ContaBancariaService;
@@ -31,6 +32,18 @@ public class ContaBancariaController {
 
     @PostMapping()
     public ResponseEntity<ContaBancaria> criarConta(@RequestBody @Valid ContaBancariaRequestDTO contaBancariaRequestDTO) {
+
+        ContaBancaria contaExistente = null;
+        try {
+            contaExistente = service.buscarConta(contaBancariaRequestDTO.getNumeroConta());
+        } catch (ContaBancariaNotFoundException e) {
+            // Ignora a exceção e prossegue com a criação da conta
+        }
+
+        if (contaExistente != null) {
+            throw new MesmaContaException("Conta bancária com o número " + contaBancariaRequestDTO.getNumeroConta() + " já existe.");
+        }
+
 
         ContaBancaria contaBancaria = new ContaBancaria();
         contaBancaria.setSaldo(contaBancariaRequestDTO.getSaldo());
@@ -81,7 +94,7 @@ public class ContaBancariaController {
 
 
 
-    @PutMapping("/saque/{numeroConta}")
+    @PutMapping("/saque/{numeroConta}") // Aqui a buscar conta é o numero da conta
     public ResponseEntity<String> sacar(@PathVariable Integer numeroConta, @RequestParam Double valor) {
         try {
             service.sacar(numeroConta, valor);
