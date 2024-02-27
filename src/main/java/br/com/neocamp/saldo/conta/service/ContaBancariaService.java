@@ -5,6 +5,7 @@ import br.com.neocamp.saldo.conta.domain.ContaBancaria;
 import java.util.List;
 
 public interface ContaBancariaService {
+
     public void sacar(Integer numeroConta, Double valor);
     public ContaBancaria depositar(Integer numeroConta, Double valor);
     public Double consultarSaldo(Integer numeroConta);
@@ -14,7 +15,7 @@ public interface ContaBancariaService {
 
     ContaBancaria buscarConta(String numeroConta);
 
-    List<ContaBancaria> buscarContas();
+    List<ContaBancaria> buscarContas(String numeroConta, String tipo, String titular);
 
 
     void excluirConta(Integer numeroConta);

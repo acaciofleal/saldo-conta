@@ -67,19 +67,23 @@ public class ContaBancariaController {
         }
     }
 
+
     @GetMapping()
-    public ResponseEntity<List<ContaBancaria>> buscarContas() {
-        List<ContaBancaria> contas = service.buscarContas();
+    public ResponseEntity<List<ContaBancaria>> buscarContas(@RequestParam(required = false) String numeroConta,
+                                                            @RequestParam(required = false) String tipo,
+                                                            @RequestParam(required = false) String titular) {
+        List<ContaBancaria> contas = service.buscarContas(numeroConta, tipo, titular);
         if (!contas.isEmpty()) {
             return ResponseEntity.ok(contas);
         } else {
+            //return new ResponseEntity<>("conta nao encontrada", HttpStatus.NOT_FOUND);
             return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/contaZero")
     public ResponseEntity<List<ContaBancaria>> buscarContasSaldoZero() {
-        List<ContaBancaria> valorDaContas = service.buscarContas();
+        List<ContaBancaria> valorDaContas = service.buscarContas(null, null, null);
         List<ContaBancaria> contasSaldoZero = new ArrayList<>();
         for (int i = 0; i < valorDaContas.size(); i++) {
             ContaBancaria elemento = valorDaContas.get(i);

@@ -38,7 +38,7 @@ public class ContaBancariaControllerTest {
        ContaBancaria conta2 = new ContaBancaria(2, "12346", "Corrente", "Layse", 0.00);
        contas.add(conta1);
        contas.add(conta2);
-       when(contaBancariaService.buscarContas())
+       when(contaBancariaService.buscarContas(null, null, null))
                .thenReturn(contas);
 
        ResponseEntity<List<ContaBancaria>> response = contaBancariaController.buscarContasSaldoZero();
