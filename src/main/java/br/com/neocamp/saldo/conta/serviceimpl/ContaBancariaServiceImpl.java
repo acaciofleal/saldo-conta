@@ -108,22 +108,53 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
         if (numeroConta == null) {
             throw new IllegalArgumentException(Constantes.ERROR_NUMERO_CONTA_NULO);
         }
-        Optional<ContaBancaria> optionalConta = repository.findByNumeroConta(numeroConta);
-        if (optionalConta.isPresent()) {
-            return optionalConta.get();
+        List<ContaBancaria> contas = repository.findByNumeroConta(numeroConta);
+        if (!contas.isEmpty()) {
+            return contas.get(0); // ou qualquer outra lógica para selecionar uma ContaBancaria da lista
         } else {
             throw new ContaBancariaNotFoundException("Conta bancária: " + numeroConta + " não foi encontrada." );
         }
     }
 
     @Override
-    public List<ContaBancaria> buscarContas() {
-        List<ContaBancaria> contas = repository.findAll();
-        if (contas.isEmpty()) {
-            throw new ContaBancariaNotFoundException(Constantes.ERROR_SEM_CONTAS);
+    public List<ContaBancaria> buscarContas(String numeroConta, String tipo, String titular) {
+        System.out.println(String.format("numero conta: %s. Tipo: %s. Titular: %s", numeroConta, tipo, titular));
+
+        List<ContaBancaria> contas;
+
+        if (numeroConta != null && tipo != null && titular != null) {
+            //select * from contas where numero= and tipo= and titular=
+            contas =  repository.findByNumeroContaAndTipoAndTitular(numeroConta, tipo, titular);
+        } else if (numeroConta != null && tipo != null) {
+            //select * from contas where numero= and tipo=
+            contas = repository.findByNumeroContaAndTipo(numeroConta, tipo);
+        } else if (numeroConta != null && titular != null) {
+            //select * from contas where numero= and titular=
+            contas = repository.findByNumeroContaAndTitular(numeroConta, titular);
+        } else if (tipo != null && titular != null) {
+            contas = repository.findByTipoAndTitular(tipo, titular);
+        } else if (numeroConta != null) {
+            //select * from contas where numero=
+            contas = repository.findByNumeroConta(numeroConta);
+        } else if (tipo != null) {
+            //select * from contas where tipo=
+            contas = repository.findByTipo(tipo);
+        } else if (titular != null) {
+            contas = repository.findByTitular(titular);
+        } else {
+            contas = repository.findAll();
         }
+
+        if (contas.isEmpty()) {
+            throw new ContaBancariaNotFoundException("Nenhuma conta bancária foi criada no sistema.");
+        }
+
+
         return contas;
     }
+
+
+
 
     @Override
     public void excluirConta(Integer numeroConta) throws ContaBancariaNotFoundException {

@@ -144,7 +144,7 @@ public class ContaBancariaServiceImplTest {
         Double saldoTest = 200.00;
 
         when(contaBancariaRepository.findByNumeroConta(numeroContaTest))
-                .thenReturn(Optional.of(new ContaBancaria(1, numeroContaTest, "Corrente", "Mariana", saldoTest)));
+                .thenReturn(List.of(new ContaBancaria(1, numeroContaTest, "Corrente", "Mariana", saldoTest)));
 
         ContaBancaria conta = contaBancariaService.buscarConta(numeroContaTest);
         assertEquals(numeroContaTest, conta.getNumeroConta());
@@ -161,7 +161,7 @@ public class ContaBancariaServiceImplTest {
                         new ContaBancaria(2, "12355", "Corrente", "Alessandra", 300.00)));
 
 
-      List<ContaBancaria> todasAsContas = contaBancariaService.buscarContas();
+      List<ContaBancaria> todasAsContas = contaBancariaService.buscarContas(null, null, null);
 
       assertNotNull(todasAsContas);
       assertEquals(todasAsContas.size(),2);
@@ -180,7 +180,7 @@ public class ContaBancariaServiceImplTest {
         String numeroContaInexistenteTest = "1250";
 
         when(contaBancariaRepository.findByNumeroConta(numeroContaInexistenteTest))
-                .thenReturn(Optional.empty());
+                .thenReturn(List.of());
 
         assertThrows(ContaBancariaNotFoundException.class, () -> contaBancariaService.buscarConta(numeroContaInexistenteTest));
     }
