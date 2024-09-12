@@ -15,7 +15,7 @@ public interface ContaBancariaRepository extends JpaRepository<ContaBancaria, In
 
 // public Optional<ContaBancaria> findByNumeroConta(String numeroConta);
 
- List<ContaBancaria> findByNumeroConta(String numeroConta);
+ Optional<ContaBancaria> findByNumeroConta(String numeroConta);
 
  List<ContaBancaria> findByTipo(String tipo);
 

@@ -3,6 +3,7 @@ package br.com.neocamp.saldo.conta.service;
 import br.com.neocamp.saldo.conta.domain.ContaBancaria;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ContaBancariaService {
 
@@ -13,7 +14,7 @@ public interface ContaBancariaService {
 
     ContaBancaria criarConta(ContaBancaria conta);
 
-    ContaBancaria buscarConta(String numeroConta);
+    Optional<ContaBancaria> buscarConta(String numeroConta);
 
     List<ContaBancaria> buscarContas(String numeroConta, String tipo, String titular);
 
