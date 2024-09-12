@@ -1,5 +1,6 @@
 package br.com.neocamp.saldo.conta.serviceimpl;
 
+import br.com.neocamp.saldo.conta.exception.MesmaContaException;
 import br.com.neocamp.saldo.conta.util.Constantes;
 import br.com.neocamp.saldo.conta.domain.ContaBancaria;
 import br.com.neocamp.saldo.conta.exception.ContaBancariaNotFoundException;
@@ -92,10 +93,20 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
 
     @Override
     public ContaBancaria criarConta(ContaBancaria conta) {
+        log.info("[INIT] Criando uma nova conta bancaria");
+
+        var contaExistente = buscarConta(conta.getNumeroConta());
+
+        if (contaExistente.isPresent()) {
+            log.error("[ERROR] Conta bancaria ja existe: {}", contaExistente.get().getNumeroConta());
+            throw new MesmaContaException("Conta bancária com o número " + conta.getNumeroConta() + " já existe.");
+        }
 
         if (conta.getSaldo() < 50) {
+            log.error("[ERROR] Conta bancaria não contem o valor minimo exigido para abertura de conta");
             throw new IllegalArgumentException(Constantes.ERROR_VALOR_MINIMO_ABERTURA_CONTA);
         }
+        log.info("[END] Conta bancaria criada com sucesso.");
         return repository.save(conta);
     }
 
@@ -104,16 +115,15 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
 
 
     @Override
-    public ContaBancaria buscarConta(String numeroConta) {
+    public Optional<ContaBancaria> buscarConta(String numeroConta) {
+        log.info("[INIT] Buscando uma conta bancaria pelo numero: {}", numeroConta);
+
         if (numeroConta == null) {
+            log.error("[ERROR] Valor de conta bancaria invalido: {}", numeroConta);
             throw new IllegalArgumentException(Constantes.ERROR_NUMERO_CONTA_NULO);
         }
-        List<ContaBancaria> contas = repository.findByNumeroConta(numeroConta);
-        if (!contas.isEmpty()) {
-            return contas.get(0); // ou qualquer outra lógica para selecionar uma ContaBancaria da lista
-        } else {
-            throw new ContaBancariaNotFoundException("Conta bancária: " + numeroConta + " não foi encontrada." );
-        }
+
+        return repository.findByNumeroConta(numeroConta);
     }
 
     @Override
@@ -133,9 +143,6 @@ public class ContaBancariaServiceImpl implements ContaBancariaService {
             contas = repository.findByNumeroContaAndTitular(numeroConta, titular);
         } else if (tipo != null && titular != null) {
             contas = repository.findByTipoAndTitular(tipo, titular);
-        } else if (numeroConta != null) {
-            //select * from contas where numero=
-            contas = repository.findByNumeroConta(numeroConta);
         } else if (tipo != null) {
             //select * from contas where tipo=
             contas = repository.findByTipo(tipo);

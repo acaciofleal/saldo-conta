@@ -18,6 +18,8 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
+import static br.com.neocamp.saldo.conta.mapper.ContaBancariaMapper.mapToDomain;
+
 @Slf4j
 @RestController
 @RequestMapping(value = "/v1/conta-bancaria")
@@ -31,37 +33,22 @@ public class ContaBancariaController {
     }
 
     @PostMapping()
-    public ResponseEntity<ContaBancaria> criarConta(@RequestBody @Valid ContaBancariaRequestDTO contaBancariaRequestDTO) {
+    public ResponseEntity<Object> criarConta(@RequestBody @Valid ContaBancariaRequestDTO contaBancariaRequestDTO) {
+        var contaBancaria = mapToDomain(contaBancariaRequestDTO);
 
-        ContaBancaria contaExistente = null;
         try {
-            contaExistente = service.buscarConta(contaBancariaRequestDTO.getNumeroConta());
-        } catch (ContaBancariaNotFoundException e) {
-            // Ignora a exceção e prossegue com a criação da conta
+            ContaBancaria novaContaBancaria = service.criarConta(contaBancaria);
+            return new ResponseEntity<>(novaContaBancaria, HttpStatus.CREATED);
+        } catch (MesmaContaException mce ) {
+            return ResponseEntity.badRequest().body(mce.getMessage());
         }
-
-        if (contaExistente != null) {
-            throw new MesmaContaException("Conta bancária com o número " + contaBancariaRequestDTO.getNumeroConta() + " já existe.");
-        }
-
-
-        ContaBancaria contaBancaria = new ContaBancaria();
-        contaBancaria.setSaldo(contaBancariaRequestDTO.getSaldo());
-        contaBancaria.setNumeroConta(contaBancariaRequestDTO.getNumeroConta());
-        contaBancaria.setTitular(contaBancariaRequestDTO.getTitular());
-        contaBancaria.setTipo(contaBancariaRequestDTO.getTipo());
-
-
-
-        ContaBancaria novaContaBancaria = service.criarConta(contaBancaria);
-        return new ResponseEntity<>(novaContaBancaria, HttpStatus.CREATED);
     }
 
     @GetMapping("/{numeroConta}")
     public ResponseEntity<ContaBancaria> buscarConta(@PathVariable String numeroConta) {
-        ContaBancaria contaBancaria = service.buscarConta(numeroConta);
-        if (contaBancaria != null) {
-            return ResponseEntity.ok(contaBancaria);
+        var contaBancaria = service.buscarConta(numeroConta);
+        if (contaBancaria.isPresent()) {
+            return ResponseEntity.ok(contaBancaria.get());
         } else {
             return ResponseEntity.notFound().build();
         }

@@ -144,11 +144,11 @@ public class ContaBancariaServiceImplTest {
         Double saldoTest = 200.00;
 
         when(contaBancariaRepository.findByNumeroConta(numeroContaTest))
-                .thenReturn(List.of(new ContaBancaria(1, numeroContaTest, "Corrente", "Mariana", saldoTest)));
+                .thenReturn(Optional.of(new ContaBancaria(1, numeroContaTest, "Corrente", "Mariana", saldoTest)));
 
-        ContaBancaria conta = contaBancariaService.buscarConta(numeroContaTest);
-        assertEquals(numeroContaTest, conta.getNumeroConta());
-        assertEquals(saldoTest, conta.getSaldo());
+        Optional<ContaBancaria> conta = contaBancariaService.buscarConta(numeroContaTest);
+        assertEquals(numeroContaTest, conta.get().getNumeroConta());
+        assertEquals(saldoTest, conta.get().getSaldo());
     }
 
 
